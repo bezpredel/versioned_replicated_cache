@@ -46,6 +46,47 @@ public class VersionedValueImplTest {
     }
 
     @Test
+    public void testCollapseWithRedundancy1() throws Exception {
+        VersionedValueImpl<K> vv = new VersionedValueImpl<K>(o0, 0, null);
+        vv.addNewValue(o1, 2);
+        vv.addNewValue(o2, 4);
+        vv.addNewValue(o3, 4);
+        verifyHasOnlyVersions(vv, o0, o1, o2, o3);
+        vv.collapse(0, 2);
+
+        verifyHasOnlyVersions(vv, o0, o1, o3);
+    }
+
+    @Test
+    public void testCollapseWithRedundancy2() throws Exception {
+        VersionedValueImpl<K> vv = new VersionedValueImpl<K>(o0, 0, null);
+        vv.addNewValue(o1, 2);
+        vv.addNewValue(o2, 2);
+        vv.addNewValue(o3, 2);
+        vv.addNewValue(o4, 4);
+        verifyHasOnlyVersions(vv, o0, o1, o2, o3, o4);
+        vv.collapse(2, 2);
+
+        verifyHasOnlyVersions(vv, o3, o4);
+    }
+
+    @Test
+    public void testCollapseWithRedundancy3() throws Exception {
+        VersionedValueImpl<K> vv = new VersionedValueImpl<K>(o0, 0, null);
+        vv.addNewValue(o1, 2);
+        vv.addNewValue(o2, 2);
+        vv.addNewValue(o3, 2);
+        vv.addNewValue(o4, 4);
+        vv.addNewValue(o5, 6);
+        vv.addNewValue(o6, 6);
+        vv.addNewValue(o7, 6);
+        verifyHasOnlyVersions(vv, o0, o1, o2, o3, o4, o5, o6, o7);
+        vv.collapse(2, 4);
+
+        verifyHasOnlyVersions(vv, o3, o4, o7);
+    }
+
+    @Test
     public void testCollapse1() throws Exception {
         assertSame(o0, vv.getBottom().getValue());
         assertSame(o9, vv.getTop().getValue());
@@ -143,7 +184,7 @@ public class VersionedValueImplTest {
             assertSame(ver, curr.getValue());
             curr = curr.getNext();
         }
-        assertNull("Unexpected value on top of the stack", curr);
+        assertNull(curr);
     }
 
     @Test

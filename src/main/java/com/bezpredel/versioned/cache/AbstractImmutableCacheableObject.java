@@ -1,9 +1,13 @@
 package com.bezpredel.versioned.cache;
 
 
-public abstract class AbstractImmutableCacheableObject implements ImmutableCacheableObject<BasicCacheIdentifier>, Cloneable {
+import java.io.Serializable;
+
+public abstract class AbstractImmutableCacheableObject implements ImmutableCacheableObject<BasicCacheIdentifier>, Cloneable, Serializable {
+    private static final long serialVersionUID = 8263108840747854862L;
+
     private final Object key;
-    private boolean locked;
+    private transient boolean locked;
 
     public AbstractImmutableCacheableObject(Object key) {
         this.key = key;

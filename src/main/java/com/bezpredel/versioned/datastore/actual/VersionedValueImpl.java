@@ -58,7 +58,6 @@ public class VersionedValueImpl<T extends Keyed> implements VersionedValue<T> {
 
     /**
      * @return earliest version left
-     * TODO: test collapse!!!!!!!
      */
     public int collapse(int earliestLocked, int latestLocked) {
         // when nothing is locked, expect earliestLocked = MAX and latestLocked = MIN

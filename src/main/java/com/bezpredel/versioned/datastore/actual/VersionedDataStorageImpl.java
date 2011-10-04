@@ -39,9 +39,7 @@ public class VersionedDataStorageImpl<T extends Keyed> implements VersionedDataS
             lockRecordStore.lockIfNeeded(vv);
             T retVal = vv.addNewValue(value, currentVersion);
 
-            if(lockRecordStore.getEarliestVersionLocked() > currentVersion) {
-                vv.collapse(lockRecordStore.getEarliestVersionLocked(), lockRecordStore.getLatestVersionLocked());
-            }
+            vv.collapse(lockRecordStore.getEarliestVersionLocked(), lockRecordStore.getLatestVersionLocked());
 
             return retVal;
         }

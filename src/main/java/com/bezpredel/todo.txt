@@ -1,0 +1,4 @@
+TODO:
+* Proper shutdown
+* Interrupted stuff
+* Time-limited stuff

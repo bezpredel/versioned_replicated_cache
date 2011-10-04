@@ -17,6 +17,7 @@ public class CacheServiceInitializer {
     private Object writeLock;
     private Executor unlockExecutor;
     private boolean unlockAsynchronously;
+    private String name;
 
     public void setWriteLock(Object writeLock) {
         this.writeLock = writeLock;
@@ -89,4 +90,11 @@ public class CacheServiceInitializer {
         return map;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

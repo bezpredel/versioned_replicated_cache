@@ -190,6 +190,12 @@ public class StorageSystemImpl<DATA, INDX> implements StorageSystem<DATA, INDX>,
         return new AsyncCommandImpl(command, versionLockObj, unlockAsynchronously);
     }
 
+    public int getCurrentVersion() {
+        synchronized (localReadLock) {
+            return currentVersion;
+        }
+    }
+
     private void unlock(VersionLock<Keyed> versionLockObj, boolean unlockAsynchronously) {
         boolean unlocked = lockRecordStore.unlockStep1(versionLockObj);
         if(unlocked) {

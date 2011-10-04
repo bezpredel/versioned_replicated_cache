@@ -25,7 +25,7 @@ public class CacheImpl {
 
         updateIndices(context, oldVal, newVal);
 
-        oldVal.stored();
+        newVal.stored();
 
         return oldVal;
     }

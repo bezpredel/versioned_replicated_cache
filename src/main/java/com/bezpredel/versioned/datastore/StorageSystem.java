@@ -12,9 +12,9 @@ public interface StorageSystem<DATA, INDX> {
 
     ReadContext<DATA, INDX> dirtyReadContext();
 
-    public Collection<DATA> getSupportedDataTypes();
-    public Collection<INDX> getSupportedIndexTypes();
+    Collection<DATA> getSupportedDataTypes();
 
+    Collection<INDX> getSupportedIndexTypes();
 
     public interface DataChangedCallback<DATA, INDX> {
         void replaced(Keyed before, Keyed after);

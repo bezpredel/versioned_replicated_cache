@@ -2,28 +2,37 @@ package com.bezpredel.versioned.cache;
 
 
 import com.bezpredel.collections.Pair;
+import com.bezpredel.collections.Utils;
 import com.bezpredel.versioned.datastore.AsyncCommand;
 import com.bezpredel.versioned.datastore.Keyed;
 import com.bezpredel.versioned.datastore.StorageSystem;
+import com.google.common.base.Function;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nullable;
+import java.util.*;
 
 public class CacheService {
+    private final String name;
     private final StorageSystem<OneToOneID, OneToManyID> baseStorageSystem;
     private final StorageSystem<OneToOneID, OneToManyID> txStorageSystem;
     private final Map<OneToOneID, CacheImpl> caches;
     private final boolean unlockAsynchronously;
+    private final Set<BasicCacheIdentifier> cacheNames;
 
     private final ArrayList<DataListener> listeners = new ArrayList<DataListener>();
 
     public CacheService(CacheServiceInitializer cacheServiceInitializer) {
+        name = cacheServiceInitializer.getName();
         baseStorageSystem = cacheServiceInitializer.initializeStorageSystem();
         txStorageSystem = cacheServiceInitializer.initializeVirtualWriter(baseStorageSystem);
         caches = cacheServiceInitializer.initializeCaches();
         unlockAsynchronously = cacheServiceInitializer.isUnlockAsynchronously();
+
+        cacheNames = Utils.map(caches.keySet(), new Function<OneToOneID, BasicCacheIdentifier>() {
+            public BasicCacheIdentifier apply(OneToOneID input) {
+                return input.getCacheIdentifier();
+            }
+        });
     }
 
     public void executeWrite(WriteCommand command) {
@@ -52,7 +61,9 @@ public class CacheService {
         <T extends ImmutableCacheableObject<BasicCacheIdentifier>> T put(T object);
         <T extends ImmutableCacheableObject<BasicCacheIdentifier>> T remove(T object);
         <T extends ImmutableCacheableObject<BasicCacheIdentifier>> T remove(BasicCacheIdentifier cache, Object key);
+        int clear(BasicCacheIdentifier cache);
 
+        CacheService getCacheService();
     }
 
     public interface WriteCommand {
@@ -87,7 +98,9 @@ public class CacheService {
         }
 
         public void replaced(Keyed before, Keyed after) {
-            getRecords().add(new Pair(before, after));
+            if(before!=null || after!=null) {
+                getRecords().add(new Pair(before, after));
+            }
         }
 
         public void finished(StorageSystem<OneToOneID, OneToManyID> source) {
@@ -168,6 +181,28 @@ public class CacheService {
             CacheImpl cache = caches.get(type.getDataStoreId());
             return (T)cache.remove(writeContext, key);
         }
+
+        public int clear(BasicCacheIdentifier type) {
+            int cnt = 0;
+            HashSet<Object> keys = new HashSet<Object>();
+            Iterator<ImmutableCacheableObject<BasicCacheIdentifier>> iter = values(type);
+            while(iter.hasNext()) {
+                keys.add(iter.next().getCacheType());
+            }
+
+            CacheImpl cache = caches.get(type.getDataStoreId());
+
+            for(Object key : keys) {
+                cache.remove(writeContext, key);
+                cnt++;
+            }
+
+            return cnt;
+        }
+
+        public CacheService getCacheService() {
+            return CacheService.this;
+        }
     }
 
     protected StorageSystem<OneToOneID, OneToManyID> getBaseStorageSystem() {
@@ -194,6 +229,18 @@ public class CacheService {
         synchronized (listeners) {
             listeners.remove(listener);
         }
+    }
+
+    public Set<BasicCacheIdentifier> getCacheNames() {
+        return cacheNames;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String toString() {
+        return "CacheService#" + name;
     }
 
     public interface DataListener {
