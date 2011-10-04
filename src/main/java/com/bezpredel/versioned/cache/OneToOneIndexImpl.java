@@ -21,4 +21,8 @@ public class OneToOneIndexImpl extends AbstractIndex {
         context.remove(indexIdentifier.getDataStoreId(), oldLeafKey);
     }
 
+    @Override
+    protected AbstractIndexIdentifier getIdentifier() {
+        return indexIdentifier;
+    }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeoutException;
 
+//todo: inSync observer
 public class SlaveCacheSyncClient {
     private final static Logger logger = Logger.getLogger(SlaveCacheSyncClient.class);
 
@@ -27,7 +28,15 @@ public class SlaveCacheSyncClient {
         this.syncThread.setName("Writer for " + slaveCacheService);
     }
 
-    private SnapshotUpdateDescriptor retrieveInitialSnapshot() throws InterruptedException {
+    public void start() {
+        syncThread.start();
+    }
+
+    public void stop() {
+        syncThread.interrupt();
+    }
+
+    private SnapshotUpdateDescriptor retrieveInitialSnapshot() throws InterruptedException, TimeoutException {
         while(true) {
             try {
                 return transportStrategy.retrieveSnapshot();

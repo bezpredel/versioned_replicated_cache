@@ -7,6 +7,7 @@ import com.bezpredel.versioned.datastore.StorageSystem;
 import com.bezpredel.versioned.datastore.actual.StorageSystemImpl;
 import com.bezpredel.versioned.datastore.virtual.VirtualWriteStorageSystem;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +28,8 @@ public class CacheServiceInitializer {
         this.unlockExecutor = unlockExecutor;
     }
 
-    public void setCacheSpecs(Set<CacheSpec> cacheSpecs) {
-        this.cacheSpecs = cacheSpecs;
+    public void setCacheSpecs(Collection<CacheSpec> cacheSpecs) {
+        this.cacheSpecs = new HashSet<CacheSpec>(cacheSpecs);
     }
 
     public boolean isUnlockAsynchronously() {

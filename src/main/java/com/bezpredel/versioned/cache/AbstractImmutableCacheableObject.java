@@ -7,7 +7,7 @@ public abstract class AbstractImmutableCacheableObject implements ImmutableCache
     private static final long serialVersionUID = 8263108840747854862L;
 
     private final Object key;
-    private transient boolean locked;
+    private transient volatile boolean locked;/*volatile?*/
 
     public AbstractImmutableCacheableObject(Object key) {
         this.key = key;
@@ -26,6 +26,10 @@ public abstract class AbstractImmutableCacheableObject implements ImmutableCache
         if(locked) {
             throw new IllegalStateException("Not allowed to modify locked objects");
         }
+    }
+
+    public String toString() {
+        return getClass().getSimpleName() + "#" + key.toString() + (locked ?"" :"*");
     }
 
     public AbstractImmutableCacheableObject clone() {

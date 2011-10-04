@@ -19,4 +19,9 @@ public class OneToManyIndexImpl extends AbstractIndex {
     protected void removeFromIndex(StorageSystem.WriteContext<OneToOneID, OneToManyID> context, Object oldLeafKey, ImmutableCacheableObject oldValue) {
         context.removeFromIndex(indexIdentifier.getDataStoreId(), oldLeafKey, oldValue.getKey());
     }
+
+    @Override
+    protected AbstractIndexIdentifier getIdentifier() {
+        return indexIdentifier;
+    }
 }

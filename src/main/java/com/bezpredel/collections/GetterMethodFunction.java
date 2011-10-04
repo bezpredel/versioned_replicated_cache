@@ -11,16 +11,20 @@ public class GetterMethodFunction<O, R> implements Function<O, R> {
     private static final Object[] empty_obj_array = new Object[0];
     private final Method method;
 
-    public GetterMethodFunction(Class<? extends O> clazz, String name) throws NoSuchMethodException {
+    public GetterMethodFunction(Class<? extends O> clazz, String name) {
         this(clazz, name, false);
     }
 
-    public GetterMethodFunction(Class<? extends O> clazz, String name, boolean nonPublic) throws NoSuchMethodException {
-        if(nonPublic) {
-            method = clazz.getDeclaredMethod(name);
-            method.setAccessible(true);
-        } else {
-            method = clazz.getMethod(name);
+    public GetterMethodFunction(Class<? extends O> clazz, String name, boolean nonPublic) {
+        try {
+            if(nonPublic) {
+                method = clazz.getDeclaredMethod(name);
+                method.setAccessible(true);
+            } else {
+                method = clazz.getMethod(name);
+            }
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(e);
         }
     }
 

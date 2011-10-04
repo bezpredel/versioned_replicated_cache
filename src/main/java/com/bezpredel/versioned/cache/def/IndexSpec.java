@@ -32,7 +32,7 @@ public class IndexSpec {
     }
 
     public boolean isOneToMany() {
-        return identifierType instanceof BasicOneToManyIndexIdentifier;
+        return identifierType.isOneToMany();
     }
 
     public boolean isSupportNullKeys() {

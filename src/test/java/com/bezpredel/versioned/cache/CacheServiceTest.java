@@ -459,6 +459,7 @@ public class CacheServiceTest {
         public String toString() {
             return id + ": " + color + " " + shape + " BOX " + (location==null ? "nowhere" : location);
         }
+
         public void stored() {
         }
 

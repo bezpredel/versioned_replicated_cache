@@ -2,7 +2,9 @@ package com.bezpredel.versioned.cache.def;
 
 import com.bezpredel.versioned.cache.BasicCacheIdentifier;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CacheSpec {
@@ -12,9 +14,9 @@ public class CacheSpec {
     public CacheSpec() {
     }
 
-    public CacheSpec(BasicCacheIdentifier type, Set<IndexSpec> indices) {
+    public CacheSpec(BasicCacheIdentifier type, Collection<IndexSpec> indices) {
         this.type = type;
-        this.indices = indices;
+        this.indices = new HashSet<IndexSpec>(indices);
     }
 
     public BasicCacheIdentifier getType() {

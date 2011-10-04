@@ -20,12 +20,14 @@ public abstract class AbstractIndex {
 
         if (staticMapping && oldValue != null && newValue != null) {
             if (oldLeafKey != newLeafKey && (oldLeafKey == null || !oldLeafKey.equals(newLeafKey))) {
-                throw new StaticIndexMappingChangedException(this, oldValue, newValue);
+                throw new StaticIndexMappingChangedException(getIdentifier(), oldValue, newValue);
             }
         }
 
-        if(shouldOldLeafBeCleanedUp(oldLeafKey, newLeafKey)) {
+        if(oldLeafKey != null && !oldLeafKey.equals(newLeafKey)) {
             removeFromIndex(context, oldLeafKey, oldValue);
+        } else {
+            // the next call will just replace
         }
 
         if (newLeafKey != null) {
@@ -37,15 +39,12 @@ public abstract class AbstractIndex {
 
     protected abstract void removeFromIndex(StorageSystem.WriteContext<OneToOneID, OneToManyID> context, Object oldLeafKey, ImmutableCacheableObject oldValue);
 
-    private boolean shouldOldLeafBeCleanedUp(Object oldKey, Object newKey) {
-        return oldKey != null && !oldKey.equals(newKey);
-    }
 
-    protected Object toKey(ImmutableCacheableObject oldValue) {
-        if(oldValue==null) {
+    protected Object toKey(ImmutableCacheableObject value) {
+        if(value==null) {
             return null;
         } else {
-            Object key = mapFunction.apply(oldValue);
+            Object key = mapFunction.apply(value);
 
             if(supportNullKeys) {
                 return KeyDecorator.wrap(key);
@@ -55,14 +54,16 @@ public abstract class AbstractIndex {
         }
     }
 
+    protected abstract AbstractIndexIdentifier getIdentifier();
+
     public static class StaticIndexMappingChangedException extends RuntimeException {
         private static final long serialVersionUID = -3645393760004357313L;
 
-        private final AbstractIndex index;
+        private final AbstractIndexIdentifier index;
         private final ImmutableCacheableObject oldValue;
         private final ImmutableCacheableObject newValue;
 
-        public StaticIndexMappingChangedException(AbstractIndex index, ImmutableCacheableObject oldValue, ImmutableCacheableObject newValue) {
+        public StaticIndexMappingChangedException(AbstractIndexIdentifier index, ImmutableCacheableObject oldValue, ImmutableCacheableObject newValue) {
             this.index = index;
             this.oldValue = oldValue;
             this.newValue = newValue;
