@@ -124,7 +124,7 @@ public class StorageSystemImpl<DATA, INDX> implements StorageSystem<DATA, INDX>,
         public <T extends Keyed> T put(DATA name, T value) {
             T previousValue = (T) StorageSystemImpl.this.getDataStore(name).put(value, getVersion());
 
-            if(callback!=null) callback.replaced(previousValue, value);
+            if(callback!=null) callback.replaced(name, previousValue, value);
 
             return previousValue;
         }
@@ -132,7 +132,7 @@ public class StorageSystemImpl<DATA, INDX> implements StorageSystem<DATA, INDX>,
         public <T extends Keyed> T remove(DATA name, Object key) {
             T previousValue = (T)StorageSystemImpl.this.getDataStore(name).remove(key, getVersion());
 
-            if(callback!=null) callback.replaced(previousValue, null);
+            if(callback!=null) callback.replaced(name, previousValue, null);
 
             return previousValue;
         }

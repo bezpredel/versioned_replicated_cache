@@ -97,9 +97,11 @@ public class CacheService {
             return txRecords;
         }
 
-        public void replaced(Keyed before, Keyed after) {
-            if(before!=null || after!=null) {
-                getRecords().add(new Pair(before, after));
+        public void replaced(OneToOneID cacheName, Keyed before, Keyed after) {
+            if (before != null || after != null) {
+                if(!cacheName.isIndex()) {
+                    getRecords().add(new Pair(before, after));
+                }
             }
         }
 

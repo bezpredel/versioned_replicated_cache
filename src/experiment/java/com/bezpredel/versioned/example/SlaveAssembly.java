@@ -4,6 +4,7 @@ import com.bezpredel.versioned.cache.replication.SlaveCacheService;
 import com.bezpredel.versioned.cache.replication.SlaveCacheServiceInitializer;
 import com.bezpredel.versioned.cache.replication.SlaveCacheSyncClient;
 import com.bezpredel.versioned.cache.replication.VMTransportStrategyImpl;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.concurrent.Executors;
 
@@ -17,7 +18,9 @@ public class SlaveAssembly {
 
     public SlaveAssembly(SlaveCacheServiceInitializer serviceInitializer, MasterAssembly masterAssembly) {
         VMTransportStrategyImpl vmTransportStrategy = new VMTransportStrategyImpl(
-            Executors.newSingleThreadExecutor(), masterAssembly.updateDistributor, masterAssembly.syncServer
+            Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setDaemon(true).build()),
+            masterAssembly.updateDistributor,
+            masterAssembly.syncServer
         );
 
         service = new SlaveCacheService(serviceInitializer);

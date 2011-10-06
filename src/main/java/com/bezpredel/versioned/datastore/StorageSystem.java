@@ -17,7 +17,7 @@ public interface StorageSystem<DATA, INDX> {
     Collection<INDX> getSupportedIndexTypes();
 
     public interface DataChangedCallback<DATA, INDX> {
-        void replaced(Keyed before, Keyed after);
+        void replaced(DATA name, Keyed before, Keyed after);
         void finished(StorageSystem<DATA, INDX> source);
     }
 
