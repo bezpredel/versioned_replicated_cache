@@ -11,6 +11,8 @@ public class User extends AbstractImmutableCacheableObject {
     private static final long serialVersionUID = -6209323010130913787L;
 
     private String userName;
+    private String firstName;
+    private String lastName;
     private Object institutionId;
     private boolean active;
 
@@ -28,6 +30,24 @@ public class User extends AbstractImmutableCacheableObject {
 
     public boolean isActive() {
         return active;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        checkIfModificationIsAllowed();
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        checkIfModificationIsAllowed();
+        this.lastName = lastName;
     }
 
     public void setInstitutionId(Object institutionId) {
@@ -51,6 +71,8 @@ public class User extends AbstractImmutableCacheableObject {
 
         this.active = active;
     }
+
+
 
     public BasicCacheIdentifier getCacheType() {
         return CACHE;
