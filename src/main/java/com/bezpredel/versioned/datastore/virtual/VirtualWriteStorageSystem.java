@@ -1,5 +1,6 @@
 package com.bezpredel.versioned.datastore.virtual;
 
+import com.bezpredel.versioned.datastore.AbstractStorageSystem;
 import com.bezpredel.versioned.datastore.AsyncCommand;
 import com.bezpredel.versioned.datastore.StorageSystem;
 import com.bezpredel.versioned.datastore.UpdateDescriptor;
@@ -9,15 +10,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class VirtualWriteStorageSystem<DATA, INDX> implements StorageSystem<DATA, INDX>, UpdateEventProvider<DATA, INDX> {
+public class VirtualWriteStorageSystem<DATA, INDX> extends AbstractStorageSystem<DATA, INDX> implements UpdateEventProvider<DATA, INDX> {
     private final static Logger logger = Logger.getLogger(VirtualWriteStorageSystem.class);
     private final StorageSystem<DATA, INDX> delegate;
-    private final Object writeLock;
     private final List<UpdateListener<DATA, INDX>> listeners = new ArrayList<UpdateListener<DATA, INDX>>();
 
     public VirtualWriteStorageSystem(StorageSystem<DATA, INDX> delegate, Object writeLock) {
+        super(writeLock);
         this.delegate = delegate;
-        this.writeLock = writeLock;
     }
 
     public void executeWrite(WriteCommand<DATA, INDX> writeCommand, DataChangedCallback<DATA, INDX> callback) {

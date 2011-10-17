@@ -1,5 +1,6 @@
 package com.bezpredel.collections;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,5 +47,13 @@ public abstract class PseudoEnum {
     @Override
     public final int hashCode() {
         return ordinal;
+    }
+
+    public static <T extends PseudoEnum> Comparator<T> getByOrdinalComparator() {
+        return new Comparator<T>() {
+            public int compare(T o1, T o2) {
+                return o1.getOrdinal() - o2.getOrdinal();
+            }
+        };
     }
 }

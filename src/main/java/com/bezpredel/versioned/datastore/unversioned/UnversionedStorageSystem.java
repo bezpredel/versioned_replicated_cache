@@ -1,6 +1,7 @@
 package com.bezpredel.versioned.datastore.unversioned;
 
 import com.bezpredel.collections.MapFactory;
+import com.bezpredel.versioned.datastore.AbstractStorageSystem;
 import com.bezpredel.versioned.datastore.AsyncCommand;
 import com.bezpredel.versioned.datastore.Keyed;
 import com.bezpredel.versioned.datastore.StorageSystem;
@@ -11,16 +12,14 @@ import java.util.*;
  * Date: 10/17/11
  * Time: 2:32 PM
  */
-public class UnversionedStorageSystem<DATA, INDX> implements StorageSystem<DATA, INDX> {
+public class UnversionedStorageSystem<DATA, INDX> extends AbstractStorageSystem<DATA, INDX> {
     private final Map<DATA, Map<Object, Keyed>> dataMap;
     private final Map<INDX, Map<Object, Map<Object, Keyed>>> indexMap;
-
-    private final Object writeLock;
 
     private int currentVersion = 0;
 
     public UnversionedStorageSystem(Class<DATA> dataIdentifierClass, Class<INDX> indexIdentifierClass, MapFactory mapFactory, Set<DATA> caches, Set<INDX> indices, Object writeLock) {
-        this.writeLock = writeLock;
+        super(writeLock);
 
         this.dataMap = mapFactory.createMap(dataIdentifierClass);
         this.indexMap = mapFactory.createMap(indexIdentifierClass);

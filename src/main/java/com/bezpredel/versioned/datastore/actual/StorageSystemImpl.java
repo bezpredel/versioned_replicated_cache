@@ -2,6 +2,7 @@ package com.bezpredel.versioned.datastore.actual;
 
 
 import com.bezpredel.collections.MapFactory;
+import com.bezpredel.versioned.datastore.AbstractStorageSystem;
 import com.bezpredel.versioned.datastore.AsyncCommand;
 import com.bezpredel.versioned.datastore.Keyed;
 import com.bezpredel.versioned.datastore.StorageSystem;
@@ -12,13 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-public class StorageSystemImpl<DATA, INDX> implements StorageSystem<DATA, INDX>, Sync {
+public class StorageSystemImpl<DATA, INDX> extends AbstractStorageSystem<DATA, INDX> implements Sync {
     private final Map<DATA, VersionedDataStorage<Keyed>> dataMap;
     private final Map<INDX, OneToManyIndexStorage<Keyed>> indexMap;
 
     private final LockRecordStore<Keyed> lockRecordStore;
-
-    private final Object writeLock;
 
     private final Object localReadLock = new Object();
     private final Executor unlockExecutor;
@@ -28,7 +27,7 @@ public class StorageSystemImpl<DATA, INDX> implements StorageSystem<DATA, INDX>,
 
 
     public StorageSystemImpl(Class<DATA> dataIdentifierClass, Class<INDX> indexIdentifierClass, MapFactory mapFactory, Set<DATA> caches, Set<INDX> indices, Object writeLock, Executor unlockExecutor) {
-        this.writeLock = writeLock;
+        super(writeLock);
         this.unlockExecutor = unlockExecutor;
         this.dataMap = mapFactory.createMap(dataIdentifierClass);
         this.indexMap = mapFactory.createMap(indexIdentifierClass);

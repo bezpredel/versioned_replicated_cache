@@ -1,5 +1,7 @@
 package com.bezpredel.versioned.datastore;
 
+import com.bezpredel.collections.PseudoEnum;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -15,6 +17,8 @@ public interface StorageSystem<DATA, INDX> {
     Collection<DATA> getSupportedDataTypes();
 
     Collection<INDX> getSupportedIndexTypes();
+
+    SSID getStorageSystemID();
 
     public interface DataChangedCallback<DATA, INDX> {
         void replaced(DATA name, Keyed before, Keyed after);
@@ -49,4 +53,15 @@ public interface StorageSystem<DATA, INDX> {
         void removeFromIndex(I name, Object leafKey, Object objectKey);
     }
 
+    public static final class SSID extends PseudoEnum {
+        private final StorageSystem storageSystem;
+
+        public SSID(StorageSystem storageSystem) {
+            this.storageSystem = storageSystem;
+        }
+
+        public <DATA, INDX> StorageSystem<DATA, INDX> getStorageSystem() {
+            return storageSystem;
+        }
+    }
 }
