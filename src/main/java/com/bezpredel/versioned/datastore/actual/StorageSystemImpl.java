@@ -117,10 +117,6 @@ public class StorageSystemImpl<DATA, INDX> implements StorageSystem<DATA, INDX>,
             return currentVersion;
         }
 
-        public <T extends Keyed> VersionedDataStorage<T> get(DATA name) {
-            return StorageSystemImpl.this.getDataStore(name);
-        }
-
         public <T extends Keyed> T put(DATA name, T value) {
             T previousValue = (T) StorageSystemImpl.this.getDataStore(name).put(value, getVersion());
 
