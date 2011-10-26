@@ -48,7 +48,7 @@ public class SingleCacheServiceTest {
     public void testBasic() throws Exception {
         // initial insert
         cacheService.executeWrite(
-            new SingleCacheService.WriteCommand() {
+            new CacheService.WriteCommand() {
                 public void execute(SingleCacheService.WriteContext context) {
                     putAll(context, redSquare_nowhere, greenSquare_nowhere, blueSquare_nowhere, orangeCircle_nowhere);
                     validateCollectionContents(context.values(Box.CACHE_ID), redSquare_nowhere, greenSquare_nowhere, blueSquare_nowhere, orangeCircle_nowhere);
@@ -102,7 +102,7 @@ public class SingleCacheServiceTest {
 
         try {
             cacheService.executeWrite(
-                new SingleCacheService.WriteCommand() {
+                new CacheService.WriteCommand() {
                     public void execute(SingleCacheService.WriteContext context) {
                         putAll(context, pinkCircle_nowhere, whiteCircle_nowhere, blackTriangle_nowhere, yellowTriangle_nowhere);
                         validateCollectionContents(context.values(Box.CACHE_ID), redSquare_nowhere, greenSquare_nowhere, blueSquare_nowhere, orangeCircle_nowhere, pinkCircle_nowhere, whiteCircle_nowhere, blackTriangle_nowhere, yellowTriangle_nowhere);
@@ -161,7 +161,7 @@ public class SingleCacheServiceTest {
         );
 
         cacheService.executeWrite(
-            new SingleCacheService.WriteCommand() {
+            new CacheService.WriteCommand() {
                 public void execute(SingleCacheService.WriteContext context) {
                     putAll(context, pinkCircle_nowhere, whiteCircle_nowhere, blackTriangle_nowhere, yellowTriangle_nowhere);
 
@@ -218,7 +218,7 @@ public class SingleCacheServiceTest {
         );
 
         cacheService.executeWrite(
-            new SingleCacheService.WriteCommand() {
+            new CacheService.WriteCommand() {
                 public void execute(SingleCacheService.WriteContext context) {
                     context.remove(whiteCircle_nowhere);
 
@@ -274,7 +274,7 @@ public class SingleCacheServiceTest {
         );
 
         cacheService.executeWrite(
-            new SingleCacheService.WriteCommand() {
+            new CacheService.WriteCommand() {
                 public void execute(SingleCacheService.WriteContext context) {
                     assertSame(greenSquare_nowhere, context.put(greenSquare_kitchen));
                     assertSame(redSquare_nowhere, context.put(redSquare_kitchen));
@@ -354,7 +354,7 @@ public class SingleCacheServiceTest {
         );
 
         cacheService.executeWrite(
-            new SingleCacheService.WriteCommand() {
+            new CacheService.WriteCommand() {
                 public void execute(SingleCacheService.WriteContext context) {
                     context.remove(redSquare_bedroom);
                     context.remove(greenSquare_bedroom);

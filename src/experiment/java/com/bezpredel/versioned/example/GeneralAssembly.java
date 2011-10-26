@@ -1,6 +1,7 @@
 package com.bezpredel.versioned.example;
 
 import com.bezpredel.versioned.cache.AbstractImmutableCacheableObject;
+import com.bezpredel.versioned.cache.CacheService;
 import com.bezpredel.versioned.cache.SingleCacheService;
 import com.bezpredel.versioned.cache.CacheServiceInitializer;
 import com.bezpredel.versioned.cache.replication.SlaveCacheServiceInitializer;
@@ -139,7 +140,7 @@ public class GeneralAssembly {
     }
 
     public void populateMaster() {
-        masterAssembly.cacheService.executeWrite(new SingleCacheService.WriteCommand() {
+        masterAssembly.cacheService.executeWrite(new CacheService.WriteCommand() {
             public void execute(SingleCacheService.WriteContext context) {
                 populateMaster(context);
             }

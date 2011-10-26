@@ -198,7 +198,7 @@ public class CacheServiceLoadTest {
             try {
                 while(System.currentTimeMillis() < runUntil) {
                     cacheService.executeWrite(
-                            new SingleCacheService.WriteCommand() {
+                            new CacheService.WriteCommand() {
                                 public void execute(SingleCacheService.WriteContext context) {
                                     updateVersion(context);
                                     verifyVersion(context);

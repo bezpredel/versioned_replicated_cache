@@ -79,19 +79,19 @@ public class MultiCacheService implements CacheService {
         }
 
         public <T extends ImmutableCacheableObject<BasicCacheIdentifier>> T get(BasicCacheIdentifier cache, Object key) {
-            return getContext(cache).get(cache, key);
+            return getContext(cache).<T>get(cache, key);
         }
 
         public <T extends ImmutableCacheableObject<BasicCacheIdentifier>> Iterator<T> values(BasicCacheIdentifier cache) {
-            return getContext(cache).values(cache);
+            return getContext(cache).<T>values(cache);
         }
 
         public <T extends ImmutableCacheableObject<BasicCacheIdentifier>> T getByIndex(BasicOneToOneIndexIdentifier cache, Object leafKey) {
-            return getContext(cache.getCacheType()).getByIndex(cache, leafKey);
+            return getContext(cache.getCacheType()).<T>getByIndex(cache, leafKey);
         }
 
         public <T extends ImmutableCacheableObject<BasicCacheIdentifier>> Iterator<T> valuesByIndex(BasicOneToManyIndexIdentifier cache, Object leafKey) {
-            return getContext(cache.getCacheType()).valuesByIndex(cache, leafKey);
+            return getContext(cache.getCacheType()).<T>valuesByIndex(cache, leafKey);
         }
 
         public int getVersion() {
