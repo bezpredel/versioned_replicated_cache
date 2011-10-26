@@ -1,7 +1,7 @@
 package com.bezpredel.versioned.example;
 
 import com.bezpredel.versioned.cache.AbstractImmutableCacheableObject;
-import com.bezpredel.versioned.cache.CacheService;
+import com.bezpredel.versioned.cache.SingleCacheService;
 import com.bezpredel.versioned.cache.CacheServiceInitializer;
 import com.bezpredel.versioned.cache.replication.SlaveCacheServiceInitializer;
 import com.bezpredel.versioned.example.data.*;
@@ -9,11 +9,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.*;
 
 /**
@@ -129,7 +127,7 @@ public class GeneralAssembly {
         return results;
     }
 
-    private void populateMaster(CacheService.WriteContext context) {
+    private void populateMaster(SingleCacheService.WriteContext context) {
 
 
         List<AbstractImmutableCacheableObject> marketsAndInstruments = parseInputFile(getClass().getResourceAsStream("testdata.xml"));
@@ -141,8 +139,8 @@ public class GeneralAssembly {
     }
 
     public void populateMaster() {
-        masterAssembly.cacheService.executeWrite(new CacheService.WriteCommand() {
-            public void execute(CacheService.WriteContext context) {
+        masterAssembly.cacheService.executeWrite(new SingleCacheService.WriteCommand() {
+            public void execute(SingleCacheService.WriteContext context) {
                 populateMaster(context);
             }
         });

@@ -36,7 +36,7 @@
 //            removedKeys = capturingContext.removedKeys;
 //        }
 //
-//        public void applyTo(CacheService.WriteContext writeContext) {
+//        public void applyTo(SingleCacheService.WriteContext writeContext) {
 //            if(removedKeys!=null) {
 //                for(Map.Entry<OneToOneID, List<Object>> entry : removedKeys.entrySet()) {
 //                    BasicCacheIdentifier cache = entry.getKey().getCacheIdentifier();

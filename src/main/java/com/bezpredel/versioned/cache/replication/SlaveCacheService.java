@@ -1,11 +1,11 @@
 package com.bezpredel.versioned.cache.replication;
 
-import com.bezpredel.versioned.cache.CacheService;
+import com.bezpredel.versioned.cache.SingleCacheService;
 import com.bezpredel.versioned.cache.CacheServiceInitializer;
 import com.bezpredel.versioned.cache.Caches;
 import com.bezpredel.versioned.cache.UpdateDescriptor;
 
-public class SlaveCacheService extends CacheService {
+public class SlaveCacheService extends SingleCacheService {
     public SlaveCacheService(CacheServiceInitializer cacheServiceInitializer) {
         super(cacheServiceInitializer);
     }
@@ -32,8 +32,8 @@ public class SlaveCacheService extends CacheService {
     }
 
 
-    private static class ClearAllCachesCommand implements CacheService.WriteCommand {
-        public void execute(CacheService.WriteContext context) {
+    private static class ClearAllCachesCommand implements SingleCacheService.WriteCommand {
+        public void execute(SingleCacheService.WriteContext context) {
             Caches.clearAll(context);
         }
     }

@@ -63,5 +63,10 @@ public interface StorageSystem<DATA, INDX> {
         public <DATA, INDX> StorageSystem<DATA, INDX> getStorageSystem() {
             return storageSystem;
         }
+
+        @Override
+        public String toString() {
+            return "SSID#" + storageSystem.toString();
+        }
     }
 }

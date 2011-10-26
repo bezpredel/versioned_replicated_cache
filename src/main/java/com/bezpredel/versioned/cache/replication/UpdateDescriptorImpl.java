@@ -1,7 +1,7 @@
 package com.bezpredel.versioned.cache.replication;
 
 import com.bezpredel.versioned.cache.BasicCacheIdentifier;
-import com.bezpredel.versioned.cache.CacheService;
+import com.bezpredel.versioned.cache.SingleCacheService;
 import com.bezpredel.versioned.cache.ImmutableCacheableObject;
 import com.bezpredel.versioned.cache.UpdateDescriptor;
 
@@ -31,7 +31,7 @@ class UpdateDescriptorImpl implements UpdateDescriptor {
         return sessionIdentifier;
     }
 
-    public void applyTo(CacheService.WriteContext writeContext) {
+    public void applyTo(SingleCacheService.WriteContext writeContext) {
         if(removedKeys!=null) {
             for(Map.Entry<BasicCacheIdentifier, Collection<Object>> entry : removedKeys.entrySet()) {
                 BasicCacheIdentifier identifier = entry.getKey();

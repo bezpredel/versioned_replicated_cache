@@ -1,9 +1,7 @@
 package com.bezpredel.versioned.cache;
 
-import com.bezpredel.collections.FieldGetterFunction;
 import com.bezpredel.versioned.cache.def.CacheSpec;
 import com.bezpredel.versioned.cache.def.IndexSpec;
-import com.bezpredel.versioned.datastore.Keyed;
 import com.bezpredel.versioned.datastore.actual.StorageSystemImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,16 +9,14 @@ import org.junit.Test;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantLock;
 
-import static com.bezpredel.TestUtils.validateCollectionContents;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 public class CacheServiceLookupsPerSecondTest {
     private final long timeToRun = 5000;
 
-    private CacheService cacheService;
+    private SingleCacheService cacheService;
     private Object writeLock;
     private Integer[] keys;
     private Integer[] moreKeys;
@@ -30,8 +26,8 @@ public class CacheServiceLookupsPerSecondTest {
     @Test
     public void testCheapestMissLookups() throws Exception {
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 0));
                         }
@@ -45,8 +41,8 @@ public class CacheServiceLookupsPerSecondTest {
     @Test
     public void testCheapestHitLookups() throws Exception {
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 0));
                         }
@@ -61,8 +57,8 @@ public class CacheServiceLookupsPerSecondTest {
     @Test
     public void test2VHitLookups() throws Exception {
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 0));
                         }
@@ -71,8 +67,8 @@ public class CacheServiceLookupsPerSecondTest {
         );
         storageSystem.__explicitLock();
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 1));
                         }
@@ -88,8 +84,8 @@ public class CacheServiceLookupsPerSecondTest {
         for(int i=0; i<50; i++) {
             final int j = i;
             cacheService.executeWrite(
-                    new CacheService.WriteCommand() {
-                        public void execute(CacheService.WriteContext context) {
+                    new SingleCacheService.WriteCommand() {
+                        public void execute(SingleCacheService.WriteContext context) {
                             for(Integer key : keys) {
                                 context.put(new D(key, j));
                             }
@@ -105,8 +101,8 @@ public class CacheServiceLookupsPerSecondTest {
     @Test
     public void test3VHitLookups() throws Exception {
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 0));
                         }
@@ -116,8 +112,8 @@ public class CacheServiceLookupsPerSecondTest {
         storageSystem.__explicitLock();
 
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 1));
                         }
@@ -127,8 +123,8 @@ public class CacheServiceLookupsPerSecondTest {
         storageSystem.__explicitLock();
 
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 2));
                         }
@@ -142,8 +138,8 @@ public class CacheServiceLookupsPerSecondTest {
     @Test
     public void test3VMissLookups() throws Exception {
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 0));
                         }
@@ -153,8 +149,8 @@ public class CacheServiceLookupsPerSecondTest {
 
         storageSystem.__explicitLock();
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 1));
                         }
@@ -164,8 +160,8 @@ public class CacheServiceLookupsPerSecondTest {
         storageSystem.__explicitLock();
 
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.put(new D(key, 2));
                         }
@@ -175,8 +171,8 @@ public class CacheServiceLookupsPerSecondTest {
         storageSystem.__explicitLock();
 
         cacheService.executeWrite(
-                new CacheService.WriteCommand() {
-                    public void execute(CacheService.WriteContext context) {
+                new SingleCacheService.WriteCommand() {
+                    public void execute(SingleCacheService.WriteContext context) {
                         for(Integer key : keys) {
                             context.remove(D.CACHE_ID, key);
                         }
@@ -228,8 +224,8 @@ public class CacheServiceLookupsPerSecondTest {
 
     private void testHitLookups(final long timeToRun, final String name) {
         cacheService.executeRead(
-                new CacheService.ReadCommand<Object>() {
-                    public Object execute(CacheService.ReadContext context) {
+                new SingleCacheService.ReadCommand<Object>() {
+                    public Object execute(SingleCacheService.ReadContext context) {
 
                         int i = 0;
                         final int len = keys.length;
@@ -250,8 +246,8 @@ public class CacheServiceLookupsPerSecondTest {
 
     private void testMissLookups(final long timeToRun, final String name) {
         cacheService.executeRead(
-                new CacheService.ReadCommand<Object>() {
-                    public Object execute(CacheService.ReadContext context) {
+                new SingleCacheService.ReadCommand<Object>() {
+                    public Object execute(SingleCacheService.ReadContext context) {
 
                         int i = 0;
                         final int len = moreKeys.length;
@@ -285,7 +281,7 @@ public class CacheServiceLookupsPerSecondTest {
             )
         )));
 
-        cacheService = new CacheService(csi);
+        cacheService = new SingleCacheService(csi);
         storageSystem = ((StorageSystemImpl) cacheService.getBaseStorageSystem());
 
         keys = new Integer[1000];

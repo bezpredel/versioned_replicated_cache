@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
-public abstract class AbstractAsyncDataListenerWithReadLock implements CacheService.DataListener {
+public abstract class AbstractAsyncDataListenerWithReadLock implements SingleCacheService.DataListener {
     private final Executor executor;
 
     public AbstractAsyncDataListenerWithReadLock(Executor executor) {
         this.executor = executor;
     }
 
-    public void onDataChanged(CacheService source, int version, List<Pair<ImmutableCacheableObject<BasicCacheIdentifier>, ImmutableCacheableObject<BasicCacheIdentifier>>> changes) {
+    public void onDataChanged(SingleCacheService source, int version, List<Pair<ImmutableCacheableObject<BasicCacheIdentifier>, ImmutableCacheableObject<BasicCacheIdentifier>>> changes) {
         AsyncCommand<Object> task = source.startAsyncRead(new Task(version, changes));
 
         try {
@@ -24,9 +24,9 @@ public abstract class AbstractAsyncDataListenerWithReadLock implements CacheServ
         }
     }
 
-    protected abstract void doWork(int writeVersion, List<Pair<ImmutableCacheableObject<BasicCacheIdentifier>, ImmutableCacheableObject<BasicCacheIdentifier>>> changes, CacheService.ReadContext context);
+    protected abstract void doWork(int writeVersion, List<Pair<ImmutableCacheableObject<BasicCacheIdentifier>, ImmutableCacheableObject<BasicCacheIdentifier>>> changes, SingleCacheService.ReadContext context);
 
-    private class Task implements CacheService.ReadCommand<Object> {
+    private class Task implements SingleCacheService.ReadCommand<Object> {
         private final int version;
         private final List<Pair<ImmutableCacheableObject<BasicCacheIdentifier>, ImmutableCacheableObject<BasicCacheIdentifier>>> changes;
 
@@ -35,7 +35,7 @@ public abstract class AbstractAsyncDataListenerWithReadLock implements CacheServ
             this.changes = changes;
         }
 
-        public Object execute(CacheService.ReadContext context) {
+        public Object execute(SingleCacheService.ReadContext context) {
             doWork(version, changes, context);
             return null;
         }

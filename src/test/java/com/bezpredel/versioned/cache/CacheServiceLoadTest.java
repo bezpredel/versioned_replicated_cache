@@ -3,21 +3,17 @@ package com.bezpredel.versioned.cache;
 import com.bezpredel.collections.FieldGetterFunction;
 import com.bezpredel.versioned.cache.def.CacheSpec;
 import com.bezpredel.versioned.cache.def.IndexSpec;
-import com.bezpredel.versioned.datastore.actual.StorageSystemImpl;
-import org.apache.commons.lang.mutable.MutableInt;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static com.bezpredel.TestUtils.validateCollectionContents;
 import static org.junit.Assert.*;
 
 public class CacheServiceLoadTest {
-    private CacheService cacheService;
+    private SingleCacheService cacheService;
     private Object writeLock;
 
     private final Box[] boxes_bedroom = new Box[] {
@@ -202,8 +198,8 @@ public class CacheServiceLoadTest {
             try {
                 while(System.currentTimeMillis() < runUntil) {
                     cacheService.executeWrite(
-                            new CacheService.WriteCommand() {
-                                public void execute(CacheService.WriteContext context) {
+                            new SingleCacheService.WriteCommand() {
+                                public void execute(SingleCacheService.WriteContext context) {
                                     updateVersion(context);
                                     verifyVersion(context);
                                 }
@@ -232,8 +228,8 @@ public class CacheServiceLoadTest {
             int cnt = 0;
             while(System.currentTimeMillis() < runUntil) {
                 cacheService.executeRead(
-                        new CacheService.ReadCommand() {
-                            public Object execute(CacheService.ReadContext context) {
+                        new SingleCacheService.ReadCommand() {
+                            public Object execute(SingleCacheService.ReadContext context) {
                                 verifyVersion(context);
                                 return null;
                             }
@@ -260,8 +256,8 @@ public class CacheServiceLoadTest {
             try {
                 while(System.currentTimeMillis() < runUntil) {
                     cacheService.executeRead(
-                            new CacheService.ReadCommand() {
-                                public Object execute(CacheService.ReadContext context) {
+                            new SingleCacheService.ReadCommand() {
+                                public Object execute(SingleCacheService.ReadContext context) {
                                     for(int i=0; i < 5 + r.nextInt(10); i++) {
                                         verifyVersion(context);
                                         try {
@@ -299,7 +295,7 @@ public class CacheServiceLoadTest {
         return marbles[version % 5][index];
     }
 
-    private void updateVersion(CacheService.WriteContext context) {
+    private void updateVersion(SingleCacheService.WriteContext context) {
         int version = context.getVersion();
 
         for (int i = 0; i < 16; i++) {
@@ -325,7 +321,7 @@ public class CacheServiceLoadTest {
         }
     }
 
-    private void verifyVersion(CacheService.ReadContext context) {
+    private void verifyVersion(SingleCacheService.ReadContext context) {
         int version = context.getVersion();
         if(version==0) return;
 
@@ -364,13 +360,13 @@ public class CacheServiceLoadTest {
 
 
 
-    private void putAll(CacheService.WriteContext context, ImmutableCacheableObject<BasicCacheIdentifier> ... objects) {
+    private void putAll(SingleCacheService.WriteContext context, ImmutableCacheableObject<BasicCacheIdentifier> ... objects) {
         for( ImmutableCacheableObject<BasicCacheIdentifier> o : objects) {
             context.put(o);
         }
     }
 
-    private void validateEachItemsPresence (CacheService.ReadContext context, ImmutableCacheableObject<BasicCacheIdentifier> ... objects) {
+    private void validateEachItemsPresence (SingleCacheService.ReadContext context, ImmutableCacheableObject<BasicCacheIdentifier> ... objects) {
         for( ImmutableCacheableObject<BasicCacheIdentifier> o : objects) {
             assertSame(o, context.get(o.getCacheType(), o.getKey()));
         }
@@ -426,7 +422,7 @@ public class CacheServiceLoadTest {
             )
         )));
 
-        cacheService = new CacheService(csi);
+        cacheService = new SingleCacheService(csi);
     }
 
     private static class Box implements ImmutableCacheableObject<BasicCacheIdentifier> {

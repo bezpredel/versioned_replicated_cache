@@ -3,19 +3,19 @@ package com.bezpredel.versioned.cache.replication;
 import com.bezpredel.collections.Pair;
 import com.bezpredel.utils.Distributor;
 import com.bezpredel.versioned.cache.BasicCacheIdentifier;
-import com.bezpredel.versioned.cache.CacheService;
+import com.bezpredel.versioned.cache.SingleCacheService;
 import com.bezpredel.versioned.cache.ImmutableCacheableObject;
 import com.bezpredel.versioned.cache.UpdateDescriptor;
 
 import java.util.*;
 
-public class MasterCacheSyncServer implements CacheService.DataListener {
-    private final CacheService cacheService;
+public class MasterCacheSyncServer implements SingleCacheService.DataListener {
+    private final SingleCacheService cacheService;
     private final Distributor<UpdateDescriptor> distributor;
     private final String sessionIdentifier = "" + System.currentTimeMillis();
 
 
-    public MasterCacheSyncServer(CacheService cacheService, Distributor<UpdateDescriptor> distributor) {
+    public MasterCacheSyncServer(SingleCacheService cacheService, Distributor<UpdateDescriptor> distributor) {
         this.cacheService = cacheService;
         this.distributor = distributor;
         this.cacheService.addDataListener(this);
@@ -30,7 +30,7 @@ public class MasterCacheSyncServer implements CacheService.DataListener {
         return new HeartbeatUpdateDescriptor(sessionIdentifier, 0);
     }
 
-    public void onDataChanged(CacheService source, int version, List<Pair<ImmutableCacheableObject<BasicCacheIdentifier>, ImmutableCacheableObject<BasicCacheIdentifier>>> changes) {
+    public void onDataChanged(SingleCacheService source, int version, List<Pair<ImmutableCacheableObject<BasicCacheIdentifier>, ImmutableCacheableObject<BasicCacheIdentifier>>> changes) {
         distributor.distribute(convertIntoUpdate(version, changes));
     }
 

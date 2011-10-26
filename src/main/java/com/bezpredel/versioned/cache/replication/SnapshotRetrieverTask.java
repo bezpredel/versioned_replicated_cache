@@ -1,23 +1,23 @@
 package com.bezpredel.versioned.cache.replication;
 
 import com.bezpredel.versioned.cache.BasicCacheIdentifier;
-import com.bezpredel.versioned.cache.CacheService;
+import com.bezpredel.versioned.cache.SingleCacheService;
 import com.bezpredel.versioned.cache.ImmutableCacheableObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-public class SnapshotRetrieverTask implements CacheService.ReadCommand<SnapshotUpdateDescriptor> {
-    private final CacheService cacheService;
+public class SnapshotRetrieverTask implements SingleCacheService.ReadCommand<SnapshotUpdateDescriptor> {
+    private final SingleCacheService cacheService;
     private final Object sessionIdentifier;
 
-    public SnapshotRetrieverTask(CacheService cacheService, Object sessionIdentifier) {
+    public SnapshotRetrieverTask(SingleCacheService cacheService, Object sessionIdentifier) {
         this.cacheService = cacheService;
         this.sessionIdentifier = sessionIdentifier;
     }
 
-    public SnapshotUpdateDescriptor execute(CacheService.ReadContext context) {
+    public SnapshotUpdateDescriptor execute(SingleCacheService.ReadContext context) {
         Set<BasicCacheIdentifier> cacheNames = cacheService.getCacheNames();
         ArrayList<ImmutableCacheableObject<BasicCacheIdentifier>> objects = new ArrayList<ImmutableCacheableObject<BasicCacheIdentifier>>();
 

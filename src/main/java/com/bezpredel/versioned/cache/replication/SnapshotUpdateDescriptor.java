@@ -1,7 +1,7 @@
 package com.bezpredel.versioned.cache.replication;
 
 import com.bezpredel.versioned.cache.BasicCacheIdentifier;
-import com.bezpredel.versioned.cache.CacheService;
+import com.bezpredel.versioned.cache.SingleCacheService;
 import com.bezpredel.versioned.cache.ImmutableCacheableObject;
 
 import java.util.Collection;
@@ -14,7 +14,7 @@ public class SnapshotUpdateDescriptor extends UpdateDescriptorImpl {
     }
 
     @Override
-    public void applyTo(CacheService.WriteContext writeContext) {
+    public void applyTo(SingleCacheService.WriteContext writeContext) {
         super.applyTo(writeContext);
     }
 
