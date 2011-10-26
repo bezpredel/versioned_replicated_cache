@@ -7,7 +7,7 @@ import com.bezpredel.versioned.datastore.AsyncCommand;
 import java.util.*;
 
 
-public class MultiCacheService implements CacheServiceI {
+public class MultiCacheService implements CacheService {
     private final String name;
     private final SingleCacheService[] cacheServices;
 

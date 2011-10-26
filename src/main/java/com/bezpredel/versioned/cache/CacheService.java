@@ -1,13 +1,12 @@
 package com.bezpredel.versioned.cache;
 
 import com.bezpredel.collections.PseudoEnum;
-import com.bezpredel.versioned.datastore.StorageSystem;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-public interface CacheServiceI {
+public interface CacheService {
     Set<BasicCacheIdentifier> getCacheNames();
     Set<IndexIdentifierType<BasicCacheIdentifier>> getSupportedIndexes();
 
@@ -40,8 +39,8 @@ public interface CacheServiceI {
     }
 
     public static final class CSID extends PseudoEnum {
-        private final CacheServiceI cacheService;
-        public CSID(CacheServiceI cacheService) {
+        private final CacheService cacheService;
+        public CSID(CacheService cacheService) {
             this.cacheService = cacheService;
         }
 

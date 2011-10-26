@@ -10,7 +10,7 @@ import com.google.common.base.Function;
 
 import java.util.*;
 
-public class SingleCacheService implements CacheServiceI {
+public class SingleCacheService implements CacheService {
     private final CSID csid;
     private final String name;
     private final StorageSystem<OneToOneID, OneToManyID> baseStorageSystem;
