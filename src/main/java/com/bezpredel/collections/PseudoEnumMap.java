@@ -2,6 +2,7 @@ package com.bezpredel.collections;
 
 import java.util.*;
 
+//TODO: im broken:()
 public class PseudoEnumMap<K extends PseudoEnum, V> extends AbstractMap<K, V> {
     private transient final MCArrayList<MapEntry<K, V>> underlying;
     private final Class<K> keyClass;
@@ -56,12 +57,6 @@ public class PseudoEnumMap<K extends PseudoEnum, V> extends AbstractMap<K, V> {
         checkForLegalKey(key);
 
         if(underlying.size() <= key.getOrdinal()) {
-            underlying.ensureCapacity(key.getOrdinal() + 1);
-
-            while(underlying.size() <=  key.getOrdinal()) {
-                underlying.add(null);
-            }
-
             underlying.set(key.getOrdinal(), createMapEntry(key, value));
             size++;
             return null;
@@ -87,7 +82,8 @@ public class PseudoEnumMap<K extends PseudoEnum, V> extends AbstractMap<K, V> {
         PseudoEnum key = (PseudoEnum) keyObj;
 
         if (underlying.size() > key.getOrdinal()) {
-            MapEntry<K, V> entry = underlying.remove(key.getOrdinal());
+            MapEntry<K, V> entry = underlying.set(key.getOrdinal(), null);
+
             if (entry != null) {
                 assert entry.getKey() == keyObj;
                 size--;
@@ -212,14 +208,11 @@ public class PseudoEnumMap<K extends PseudoEnum, V> extends AbstractMap<K, V> {
 
         private MCArrayList(int initialCapacity) {
             super(initialCapacity);
+            for (int i=0; i<initialCapacity;i++) {
+                add(null);
+            }
         }
-
-        private MCArrayList() {
-        }
-
-        private MCArrayList(Collection<? extends T> c) {
-            super(c);
-        }
+   
     }
 
     public static MapFactory factory() {
