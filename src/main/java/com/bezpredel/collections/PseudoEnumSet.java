@@ -25,7 +25,7 @@ public class PseudoEnumSet<K extends PseudoEnum> extends AbstractSet<K> {
         K k = (K)o;
         boolean retVal = bitSet.get(k.getOrdinal());
         if(retVal) {
-            bitSet.set(k.getOrdinal(), true);
+            bitSet.set(k.getOrdinal(), false);
             size--;
         }
 
@@ -62,7 +62,7 @@ public class PseudoEnumSet<K extends PseudoEnum> extends AbstractSet<K> {
 
             public boolean hasNext() {
                 advance();
-                return bitSet.get(pos);
+                return bitSet.get(pos); // this works without a range check because BitSet.get() returns false for out-of-range checks
             }
 
             public K next() {
@@ -70,7 +70,9 @@ public class PseudoEnumSet<K extends PseudoEnum> extends AbstractSet<K> {
                 if(!bitSet.get(pos)) {
                     throw new  NoSuchElementException();
                 } else {
-                    return PseudoEnum.get(keyClass, pos);
+                    K k = PseudoEnum.get(keyClass, pos);
+                    pos++;
+                    return k;
                 }
             }
 
