@@ -34,6 +34,7 @@ public class VersionedDataStorageImpl<T extends Keyed> implements VersionedDataS
         if (vv == null) {
             vv = new VersionedValueImpl<T>(value, currentVersion, this);
             map.put(vv);
+            // TODO: can it be that anothe thread will see the reference to the vv in the map, but the fields of vv will be in a bad state? and does it matter?
             return null;
         } else {
             lockRecordStore.lockIfNeeded(vv);
