@@ -141,6 +141,7 @@ public class StorageSystemImpl<DATA, INDX> extends AbstractStorageSystem<DATA, I
         }
 
         public <T extends Keyed> T get(DATA name, Object key) {
+            // TODO: Why not getTop(key) ??
             return (T)StorageSystemImpl.this.getDataStore(name).get(key, getVersion());
         }
 
